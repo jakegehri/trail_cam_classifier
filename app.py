@@ -1,9 +1,10 @@
 from fastai.vision.all import *
 import gradio as gr
-from PIL import Image
 
-learn = load_learner('model1.pkl')
-categories = ('deer', 'elk', 'moose')
+__all__ = ['learn', 'classify_image', 'categories', 'image', 'label', 'examples', 'intf']
+
+learn = load_learner('model.pkl')
+categories = learn.dls.vocab
 
 def classify_image(img):
     pred, idx, probs = learn.predict(img)
@@ -11,6 +12,7 @@ def classify_image(img):
 
 image = gr.inputs.Image(shape=(192,192))
 label = gr.outputs.Label()
+examples = ['deer.jpg', 'elk.jpg', 'moose.jpg']
 
-intf = gr.Interface(fn=classify_image, inputs=image, outputs=label)
-intf.launch(inline=False)
+intf = gr.Interface(fn=classify_image, inputs=image, outputs=label, examples=examples)
+intf.launch()
